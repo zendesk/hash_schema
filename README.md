@@ -1,6 +1,6 @@
 # HashSchema
 
-TODO: Write a gem description
+A ruby gem that validates Hash against some schema, works for hashes created from loading json and yml files, and suchlike
 
 ## Installation
 
