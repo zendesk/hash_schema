@@ -228,5 +228,15 @@ describe HashSchema do
         expect(schema.validate(data).reject { |_, v| v.nil? }).to include(:y)
       end
     end
+
+    context 'when hash keys contain "strict"' do
+      it 'works around by passing the whole hash as "schema_hash"' do
+        schema = subject.new(strict: true, schema_hash: { strict: HashSchema::NumberSchema.new })
+
+        data = { strict: 1 }
+
+        expect(schema.validate(data).reject { |_, v| v.nil? }).to be_empty
+      end
+    end
   end
 end

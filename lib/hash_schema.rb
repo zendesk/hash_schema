@@ -150,8 +150,8 @@ module HashSchema
   end
 
   class HashSchema < Schema
-    def initialize(strict: false, **hash)
-      @chain = hash
+    def initialize(strict: false, schema_hash: {}, **keywords)
+      @chain = schema_hash.merge(keywords)
       @strict = strict
     end
 
