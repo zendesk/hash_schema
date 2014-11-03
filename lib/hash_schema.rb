@@ -159,7 +159,7 @@ module HashSchema
       return error(hash) unless hash.is_a?(Hash)
       {}.tap do |output|
         chain.each do |key, schema|
-          val = hash[key] || hash.fetch(key.to_s, Void.new)
+          val = hash.fetch(key, hash.fetch(key.to_s, Void.new))
           output[key] = if schema.kind_of?(Schema)
             schema.validate(val)
           else
