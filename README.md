@@ -1,4 +1,4 @@
-# HashSchema
+# HashSchema [![Gem Version](https://badge.fury.io/rb/hash_schema.svg)](http://badge.fury.io/rb/hash_schema)
 
 A ruby gem that validates Hash against some schema, works for hashes created from loading json and yml files, and suchlike
 
