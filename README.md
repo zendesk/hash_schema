@@ -18,6 +18,23 @@ Or install it yourself as:
 
 ## Usage
 
+### What it is / isn't for
+
+It is for:
+
+- validating structure
+    - e.g. a hash contains keys "greetings" and "name", and "name" is an inner hash that contains "give", "family" and "other"
+        - { "greetings": "Hello", "name": { "given": "John", "family": "Doe", "other": "" } }
+- validating data type
+    - e.g. { "offset": [7, 8] }, where "offset" has to be an array of numbers
+- validating constants
+    - e.g. some value has to be set to `true`
+
+It is **not** for:
+
+- validating dependency
+    - e.g. key A has to exist if key B exists
+
 [Jump down to see detailed example](#demo)
 
 ### Defined schemas
