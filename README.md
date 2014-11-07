@@ -18,22 +18,93 @@ Or install it yourself as:
 
 ## Usage
 
+[Jump down to see detailed example](#demo)
+
 ### Defined schemas
 
-* StringSchema
-* NumberSchema
-* BooleanSchema
-* EnumSchema
-* OptionalSchema
-* OrSchema
-* ArraySchema
-* **HashSchema**
+#### StringSchema
 
-### API
+- `.new`
+    - takes no arguments
+- `#validate` :: (String|\*) -> (*Null*|error)
 
-- `#valdiate` :: Hash -> Hash
-- `#pretty_validate` :: Hash -> String **(*)**
-- `#interpret` :: Hash -> [String]
+#### NumberSchema
+
+- `.new`
+    - takes no arguments
+- `#validate` :: (Number|\*) -> (*Null*|error)
+
+#### BooleanSchema
+
+- `.new`
+    - takes no arguments
+- `#validate` :: (Boolean|\*) -> (*Null*|error)
+
+#### EnumSchema
+
+- `.new`
+    - takes literal constants, e.g. 123, "456", false, true...
+- `#validate` :: (\*) -> (*Null*|error)
+    - An inclusion check is performed
+
+#### OptionalSchema
+
+- `.new`
+    - takes a Schema or literal constant
+- `#validate` :: (Void|\*) -> (*Null*|error)
+    - `Void.new` is the internal representation of `Nothing`
+    - if anything other than `Void.new` is given
+        - it is delegated to the Schema, if a Schema was given when initializing
+        - it performs equality check, if initialized with anything other than a Schema
+
+#### OrSchema
+
+- `.new`
+    - takes multiple Schemas
+- `#validate` :: (\*) -> (*Null*|error)
+    - it passes if any of the given Schema passes
+    - it errors if all of the given Schema end up with error
+
+#### ArraySchema
+
+- `.new`
+    - takes one Schemas
+- `#validate` :: (Array|\*) -> (**Array**|error)
+    - it errors if the arugment passed to `#validate` is not an array
+    - it maps the Schema validation over the elements in the array
+    - it returns the mapped-over array
+
+#### HashSchema
+
+- `.new`
+    - takes keywords, see `#1`
+    - other than Schemas, you can also specify literal constants like in `#2`
+    - you can specify `strict` mode if you want to see errors for not specified keys
+    - if you have the key `strict` in your data hash, see `#3`
+
+```ruby
+#1
+HashSchema.new(a: NumberSchema.new, b: BooleanSchema.new, c: StringSchema.new)
+
+#2
+HashSchema.new(strict: true,
+  number: 1,
+  boolean: true,
+  string: 'string',
+  ampm_array: ArraySchema.new(EnumSchema.new('am', 'pm'))
+)
+
+#3
+HashSchema.new(strict: true,
+  schema_hash: {
+    strict: 'I am strict'
+  }
+)
+```
+
+- `#valdiate` :: (Hash|\*) -> (**Hash**|error)
+- `#pretty_validate` :: (Hash|\*) -> String **(*)**
+- `#interpret` :: (Hash|\*) -> [String]
 
 **(*)** `#pretty_validate` is just a `JSON.pretty_generate` wrapper of `#validate`
 
