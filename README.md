@@ -23,10 +23,10 @@ Or install it yourself as:
 It is for:
 
 - validating structure
-    - e.g. a hash contains keys "greetings" and "name", and "name" is an inner hash that contains "give", "family" and "other"
+    - e.g. a hash contains keys `greetings` and `name`, and `name` is an inner hash that contains `give`, `family` and `other`
         - { "greetings": "Hello", "name": { "given": "John", "family": "Doe", "other": "" } }
 - validating data type
-    - e.g. { "offset": [7, 8] }, where "offset" has to be an array of numbers
+    - e.g. { "offset": [7, 8] }, where `offset` has to be an array of numbers
 - validating constants
     - e.g. some value has to be set to `true`
 
