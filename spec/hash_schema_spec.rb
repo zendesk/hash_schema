@@ -113,6 +113,8 @@ describe HashSchema do
         HashSchema::NumberSchema.new,
         HashSchema::StringSchema.new,
         HashSchema::ArraySchema.new(HashSchema::StringSchema.new),
+        HashSchema::ArraySchema.new(HashSchema::NumberSchema.new),
+        HashSchema::HashSchema.new(boolean: HashSchema::BooleanSchema),
         HashSchema::HashSchema.new
       )
     end
@@ -131,7 +133,19 @@ describe HashSchema do
       end
 
       it 'delegates to given HashSchema for hash' do
-        expect(multitype.validate({})).to be_a(Hash)
+        expect(multitype.validate(boolean: true)).to be_a(Hash)
+      end
+
+      it 'delegates to more than one inner ArraySchema' do
+        validation_result = multitype.validate([1, 2, 3])
+        expect(validation_result).to be_a(Array)
+        expect(validation_result.compact).to be_empty
+      end
+
+      it 'delegates to more than one inner HashSchema' do
+        validation_result = multitype.validate(boolean: 5)
+        expect(validation_result).to be_a(Hash)
+        expect(validation_result.values.compact).to be_empty
       end
     end
 

@@ -86,18 +86,62 @@ module HashSchema
     end
 
     def validate(data)
+      empty_error = true
+      last_error = nil
       chain.each do |schema|
-        if data.is_a?(Array) && schema.is_a?(ArraySchema) || data.is_a?(Hash) && schema.is_a?(HashSchema)
-          return schema.validate(data)
-        end
-        return if schema.validate(data).nil?
+        next unless schema_matches_data_type(schema, data)
+        last_error = schema.validate(data)
+        empty_error = recursive_empty_error?(last_error)
+        break if empty_error
       end
-      error(data)
+      if empty_error
+        last_error
+      else
+        error(data)
+      end
     end
 
     def expectation
       *names, name = chain.map(&:expectation)
       names.join(', ') << " or #{name}"
+    end
+
+    private
+
+    def recursive_empty_error?(error)
+      case error
+      when Array
+        true if error.compact.empty?
+      when NilClass
+        true
+      when String
+        false
+      when Hash
+        true if recursive_flat_hash_values(error).empty?
+      else
+        false
+      end
+    end
+
+    def schema_matches_data_type(schema, data)
+      case schema
+      when ArraySchema
+        data.is_a? Array
+      when HashSchema
+        data.is_a? Hash
+      else
+        true
+      end
+    end
+
+    def recursive_flat_hash_values(hash)
+      if hash.is_a? Hash
+        hash.values.map do |value|
+          recursive_flat_hash_values(value)
+        end.flatten.compact
+      else
+        hash
+      end
     end
   end
 
