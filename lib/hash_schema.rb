@@ -110,14 +110,12 @@ module HashSchema
 
     def recursive_empty_error?(error)
       case error
-      when Array
-        true if error.compact.empty?
       when NilClass
         true
       when String
         false
-      when Hash
-        true if recursive_flat_hash_values(error).empty?
+      when Hash, Array
+        recursive_flat_error_values(error).empty?
       else
         false
       end
@@ -134,13 +132,17 @@ module HashSchema
       end
     end
 
-    def recursive_flat_hash_values(hash)
-      if hash.is_a? Hash
-        hash.values.map do |value|
-          recursive_flat_hash_values(value)
-        end.flatten.compact
+    def recursive_flat_error_values(error_object)
+      if error_object.is_a? Hash
+        error_object.values.flat_map do |value|
+          recursive_flat_error_values(value)
+        end.compact
+      elsif error_object.is_a? Array
+        error_object.flat_map do |value|
+          recursive_flat_error_values(value)
+        end.compact
       else
-        hash
+        error_object
       end
     end
   end

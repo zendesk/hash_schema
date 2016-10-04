@@ -114,6 +114,7 @@ describe HashSchema do
         HashSchema::StringSchema.new,
         HashSchema::ArraySchema.new(HashSchema::StringSchema.new),
         HashSchema::ArraySchema.new(HashSchema::NumberSchema.new),
+        HashSchema::ArraySchema.new(HashSchema::HashSchema.new(stringy: HashSchema::StringSchema.new)),
         HashSchema::HashSchema.new(boolean: HashSchema::BooleanSchema),
         HashSchema::HashSchema.new
       )
@@ -146,6 +147,12 @@ describe HashSchema do
         validation_result = multitype.validate(boolean: 5)
         expect(validation_result).to be_a(Hash)
         expect(validation_result.values.compact).to be_empty
+      end
+
+      it 'recurses into hashes and arrays' do
+        validation_result = multitype.validate([ { stringy: 'hello' } ])
+        expect(validation_result).to be_a(Array)
+        expect(validation_result).to eq [ { stringy: nil } ]
       end
     end
 
