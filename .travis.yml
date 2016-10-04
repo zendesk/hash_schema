@@ -1,0 +1,6 @@
+language: ruby
+cache:
+  bundler: true
+sudo: false
+branches:
+  only: master
