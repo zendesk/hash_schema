@@ -246,7 +246,14 @@ describe HashSchema do
 
         data = { x: 0, y: 1 }
 
-        expect(schema.validate(data).reject { |_, v| v.nil? }).to include(:y)
+        expect(schema.validate(data).reject { |_, v| v.nil? }).to include('y')
+      end
+
+      it 'works for string keys' do
+        schema = subject.new(strict: true, x: 0)
+
+        data = { 'x' => 0 }
+        expect(schema.validate(data).reject { |_, v| v.nil? }).to be_empty
       end
     end
 

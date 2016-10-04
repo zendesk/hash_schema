@@ -213,7 +213,7 @@ module HashSchema
           end
         end
 
-        output.merge!((hash.keys - chain.keys).map { |k| [k, unexpected(k)] }.to_h) if @strict
+        output.merge!((hash.keys.map(&:to_s) - chain.keys.map(&:to_s)).map { |k| [k, unexpected(k)] }.to_h) if @strict
       end
     end
 
